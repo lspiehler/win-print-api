@@ -16,7 +16,7 @@
     "swagger-ui-express": "^4.1.6"
   },
   "description": "Web API service for managed print servers",
-  "main": "app.js",
+  "main": "./bin/www",
   "devDependencies": {},
   "repository": {
     "type": "git",
