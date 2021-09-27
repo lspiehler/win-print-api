@@ -5,11 +5,15 @@
       install_dir: "C:\\win-print-api"
       repo: "https://github.com/lspiehler/win-print-api.git"
     tasks:
-      #- name: Task name
-      #  stat:
-      #    path: "{{ install_dir }}"
-      #  register: register_name
+      - name: Task name
+        win_stat:
+          path: "{{ install_dir }}"
+        register: repo_dir
+      - name: Create directory structure
+        win_file:
+          path: "{{ install_dir }}"
+          state: directory
       - name: clone repositories
-        win_command: "git clone {{ install_dir }}"
+        win_command: "git clone {{ repo }} {{ install_dir }}"
         args:
           chdir: "C:\\Program Files\\Git\\bin"
