@@ -2,7 +2,7 @@
   - name: Install Windows Updates
     hosts: "{{ match_host }}"
     vars:
-      install_dir: "C:\win-print-api"
+      install_dir: "C:\\win-print-api"
       repo: "https://github.com/lspiehler/win-print-api.git"
     tasks:
       - name: Task name
