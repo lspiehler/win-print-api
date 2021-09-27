@@ -9,6 +9,16 @@
         win_stat:
           path: "{{ install_dir }}"
         register: repo_dir
+      - name: Firewall rule to allow SMTP on TCP port 25
+        win_firewall_rule:
+          name: Print Management Service
+          localport: 3000
+          action: allow
+          direction: in
+          protocol: tcp
+          profiles: "domain,private,public"
+          state: present
+          enabled: yes
       - name: Clone repo and create service
         block:
           - name: Create install directory
