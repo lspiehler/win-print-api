@@ -13,9 +13,9 @@ var fs = require('fs');
  */
 
 const opts = {
-  key: fs.readFileSync('./cert/cert.key'),
-  cert: fs.readFileSync('./cert/cert.pem'),
-  ca: fs.readFileSync('./cert/ca.pem'),
+  key: fs.readFileSync(require('path').join(__dirname, '../cert/cert.key')),
+  cert: fs.readFileSync(require('path').join(__dirname, '../cert/cert.pem')),
+  ca: fs.readFileSync(require('path').join(__dirname, '../cert/ca.pem')),
   requestCert: true,
   rejectUnauthorized: true
 }
