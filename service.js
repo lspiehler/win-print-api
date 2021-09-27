@@ -4,13 +4,7 @@ var Service = require('node-windows').Service;
 var svc = new Service({
     name:'Print Management Service',
     description: 'Print Management Service',
-    script: 'C:\\win-print-api\\bin\\www',
-    env: [
-        {
-          name: 'APP_DIR_PATH',
-          value: 'C:\\win-print-api'
-        }
-      ]
+    script: 'C:\\win-print-api\\bin\\www'
 });
 
 // Listen for the "install" event, which indicates the
