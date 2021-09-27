@@ -19,6 +19,10 @@
             win_command: "git clone {{ repo }} {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\Git\\bin"
+          - name: Create service
+            win_command: "node {{ install_dir }}\\service.js"
+            args:
+              chdir: "C:\\Program Files\\nodejs"
         when: not repo_dir.stat.exists
       - name: Update repo and start service
         block:
