@@ -1,10 +1,15 @@
 ---
   - name: Install Windows Updates
     hosts: "{{ match_host }}"
+    vars:
+      install_dir: "C:\win-print-api"
+      repo: "https://github.com/lspiehler/win-print-api.git"
     tasks:
-      - name: Just get information about the repository whether or not it has already been cloned locally
-        ansible.builtin.git:
-          repo: 'https://github.com/lspiehler/win-print-api.git'
-          dest: C:/win-print-api
-          clone: yes
-          update: yes
+      - name: Task name
+        stat:
+          path: "{{ install_dir }}"
+        register: register_name
+      - name: clone repositories
+        win_command: "git clone {{ install_dir }}"
+        args:
+          chdir: "C:\\Program Files\\Git\\bin"
