@@ -9,7 +9,7 @@
         win_stat:
           path: "{{ install_dir }}"
         register: repo_dir
-      - name: Firewall rule to allow SMTP on TCP port 25
+      - name: Firewall rule to allow Print Management API on TCP port 3000
         win_firewall_rule:
           name: Print Management Service
           localport: 3000
