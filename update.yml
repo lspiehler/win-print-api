@@ -19,6 +19,10 @@
             win_command: "git clone {{ repo }} {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\Git\\bin"
+          - name: Install dependencies
+            win_command: "npm install"
+            args:
+              chdir: "C:\\Program Files\\nodejs"
           - name: Create service
             win_command: "node {{ install_dir }}\\service.js"
             args:
@@ -30,4 +34,8 @@
             win_command: "git pull origin master"
             args:
               chdir: "{{ install_dir }}"
+          - name: Update dependencies
+            win_command: "npm install"
+            args:
+              chdir: "C:\\Program Files\\nodejs"
         when: repo_dir.stat.exists
