@@ -5,15 +5,25 @@
       install_dir: "C:\\win-print-api"
       repo: "https://github.com/lspiehler/win-print-api.git"
     tasks:
-      - name: Task name
+      - name: Check if install directory exists
         win_stat:
           path: "{{ install_dir }}"
         register: repo_dir
-      - name: Create directory structure
-        win_file:
-          path: "{{ install_dir }}"
-          state: directory
-      - name: clone repositories
-        win_command: "git clone {{ repo }} {{ install_dir }}"
-        args:
-          chdir: "C:\\Program Files\\Git\\bin"
+      - name: Clone repo and create service
+        block:
+          - name: Create install directory
+            win_file:
+              path: "{{ install_dir }}"
+              state: directory
+          - name: Clone repo
+            win_command: "git clone {{ repo }} {{ install_dir }}"
+            args:
+              chdir: "C:\\Program Files\\Git\\bin"
+        when: not repo_dir.stat.exists
+      - name: Update repo and start service
+        block:
+          - name: Update repo
+            win_command: "git pull origin master"
+            args:
+              chdir: "{{ install_dir }}"
+        when: repo_dir.stat.exists
