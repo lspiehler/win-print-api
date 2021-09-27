@@ -30,6 +30,10 @@
         when: not repo_dir.stat.exists
       - name: Update repo and start service
         block:
+          - name: Stop service
+            win_service:
+              name: printmanagementservice.exe
+              state: stopped
           - name: Update repo
             win_command: "git pull origin master"
             args:
@@ -38,8 +42,8 @@
             win_command: "npm.cmd install {{ install_dir }} --prefix {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\nodejs"
-          - name: Restart service
+          - name: Start service
             win_service:
               name: printmanagementservice.exe
-              state: restarted
+              state: started
         when: repo_dir.stat.exists
