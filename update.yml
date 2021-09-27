@@ -20,7 +20,7 @@
             args:
               chdir: "C:\\Program Files\\Git\\bin"
           - name: Install dependencies
-            win_command: "npm.cmd install --prefix {{ install_dir }}"
+            win_command: "npm.cmd install {{ install_dir }} --prefix {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\nodejs"
           - name: Create service
@@ -35,7 +35,7 @@
             args:
               chdir: "{{ install_dir }}"
           - name: Update dependencies
-            win_command: "npm.cmd install --prefix {{ install_dir }}"
+            win_command: "npm.cmd install {{ install_dir }} --prefix {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\nodejs"
         when: repo_dir.stat.exists
