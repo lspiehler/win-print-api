@@ -20,7 +20,7 @@
             args:
               chdir: "C:\\Program Files\\Git\\bin"
           - name: Install dependencies
-            win_command: "npm install"
+            win_command: "npm.cmd install"
             args:
               chdir: "C:\\Program Files\\nodejs"
           - name: Create service
