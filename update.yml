@@ -38,4 +38,8 @@
             win_command: "npm.cmd install {{ install_dir }} --prefix {{ install_dir }}"
             args:
               chdir: "C:\\Program Files\\nodejs"
+          - name: Restart service
+            win_service:
+              name: printmanagementservice.exe
+              state: restarted
         when: repo_dir.stat.exists
