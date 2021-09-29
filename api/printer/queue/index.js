@@ -1,7 +1,7 @@
 const list = require('./list');
-const add = require('./add');
+const create = require('./create');
 
 module.exports = {
     list: list,
-    add: add
+    create: create
 }

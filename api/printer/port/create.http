@@ -1,0 +1,6 @@
+POST http://127.0.0.1:3000/api/printer/port/add HTTP/1.1
+content-type: application/json
+
+{
+    "ip": "192.168.1.100"
+}
