@@ -39,18 +39,31 @@ module.exports = function(params, callback) {
             name = params.name;
         }*/
         powershell.runCommand({ cmd: 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"', waitstdout: false }, function(err, printerresp) {
-            console.log('Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"');
+            //console.log('Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"');
             if(err) {
-                let resp = {
-                    status: 500,
-                    headers: [],
-                    body: {
-                        result: 'error',
-                        message: err,
-                        data: null
+                if(err.toUpperCase().indexOf('THE SPECIFIED PRINTER ALREADY EXISTS')) {
+                    let resp = {
+                        status: 200,
+                        headers: [],
+                        body: {
+                            result: 'error',
+                            message: 'The printer already exists',
+                            data: null
+                        }
                     }
+                    callback(err, resp);
+                } else {
+                    let resp = {
+                        status: 500,
+                        headers: [],
+                        body: {
+                            result: 'error',
+                            message: err,
+                            data: null
+                        }
+                    }
+                    callback(false, resp);
                 }
-                callback(false, resp);
             } else {
                 let resp = {
                     status: 201,
