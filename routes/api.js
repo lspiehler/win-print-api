@@ -25,7 +25,7 @@ router.get('/printer/:object/:action', function(req, res, next) {
 
 router.post('/printer/:object/:action', function(req, res, next) {
     if(printer.hasOwnProperty(req.params.object) && printer[req.params.object].hasOwnProperty(req.params.action)) {
-        console.log(req.body);
+        //console.log(req.body);
         printer[req.params.object][req.params.action](req.body, function(err, resp) {
             if(resp.headers) {
                 for(let i = 0; i <= resp.headers.length - 1; i++) {
