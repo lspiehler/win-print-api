@@ -13,13 +13,13 @@ module.exports = function(params, callback) {
                 let printers = JSON.parse(printerresp.stdout.toString());
                 printerht = {};
                 for(let i = 0; i <= printers.length - 1; i++) {
-                    /*if(printerht.hasOwnProperty(printers[i].Name)) {
+                    /*if(printerht.hasOwnProperty(printers[i].name)) {
 
                     }*/
                     delete printers[i].CimSystemProperties;
                     delete printers[i].CimInstanceProperties;
                     delete printers[i].CimClass;
-                    printerht[printers[i].Name] = printers[i];
+                    printerht[printers[i].name] = printers[i];
                 }
                 //console.log(printerht);
                 callback(false, printerht);

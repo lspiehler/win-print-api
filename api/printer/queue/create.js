@@ -1,7 +1,7 @@
 const powershell = require('../../../lib/powershell');
 
 module.exports = function(params, callback) {
-    let requiredparams = ['Name', 'Driver', 'Port']
+    let requiredparams = ['name', 'driver', 'port']
     for(let i = 0; i <= requiredparams.length - 1; i++) {
         if(params.hasOwnProperty(requiredparams[i])==false) {
             let resp = {
@@ -19,11 +19,11 @@ module.exports = function(params, callback) {
     }
     let location = '';
     let comment = '';
-    if(params.hasOwnProperty('Location')) {
-        location = params.Location;
+    if(params.hasOwnProperty('location')) {
+        location = params.location;
     }
-    if(params.hasOwnProperty('Comment')) {
-        comment = params.Comment;
+    if(params.hasOwnProperty('comment')) {
+        comment = params.comment;
     }
     let multipletrays = false;
     let trays = 0;
@@ -31,15 +31,15 @@ module.exports = function(params, callback) {
         trays = params.Trays - 1;
         multipletrays = true;
     }
-    for(let i = 0; i <= trays; i++) {
+    /*for(let i = 0; i <= trays; i++) {
         let name;
         if(multipletrays) {
-            name = params.Name + '-T' + (i + 1);
+            name = params.name + '-T' + (i + 1);
         } else {
-            name = params.Name;
-        }
-        powershell.runCommand({ cmd: 'Add-Printer -Name "' + name + '" -DriverName "' + params.Driver + '" -PortName "' + params.Port + '" -Location "' + location + '" -Comment "' + comment + '"', waitstdout: false }, function(err, printerresp) {
-            console.log('done');
+            name = params.name;
+        }*/
+        powershell.runCommand({ cmd: 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"', waitstdout: false }, function(err, printerresp) {
+            console.log('Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"');
             if(err) {
                 let resp = {
                     status: 500,
@@ -64,5 +64,5 @@ module.exports = function(params, callback) {
                 callback(false, resp);
             }
         });
-    }
+    //}
 }

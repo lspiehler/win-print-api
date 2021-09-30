@@ -13,13 +13,13 @@ module.exports = function(params, callback) {
                 let ports = JSON.parse(portresp.stdout.toString());
                 portht = {};
                 for(let i = 0; i <= ports.length - 1; i++) {
-                    /*if(portht.hasOwnProperty(ports[i].Name)) {
+                    /*if(portht.hasOwnProperty(ports[i].name)) {
 
                     }*/
                     delete ports[i].CimSystemProperties;
                     delete ports[i].CimInstanceProperties;
                     delete ports[i].CimClass;
-                    portht[ports[i].Name] = ports[i];
+                    portht[ports[i].name] = ports[i];
                 }
                 //console.log(portht);
                 callback(false, portht);
