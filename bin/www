@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
+const config = require('../config');
+const serverlib = require('../lib/server');
 /**
  * Module dependencies.
  */
@@ -89,10 +90,23 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
+function pingManagement() {
+  serverlib.ping(function(err, resp) {
+    if(err) {
+      console.log('Error connecting to management server');
+      console.log(err);
+    }
+    setTimeout(function() {
+      pingManagement();
+    }, 5000);
+  });
+}
+
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  pingManagement();
 }
