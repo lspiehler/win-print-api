@@ -4,14 +4,33 @@ var driverht;
 
 module.exports = function(params, callback) {
     if(driverht) {
-        callback(false, driverht);
+        let resp = {
+            status: 200,
+            headers: [],
+            body: {
+                result: 'success',
+                message: null,
+                data: driverht
+            }
+        }
+        callback(false, resp);
     } else {
         powershell.runCommand({ cmd: 'Get-PrinterDriver | ConvertTo-Json' }, function(err, driverresp) {
             if(err) {
-                callback(err, false);
+                let resp = {
+                    status: 500,
+                    headers: [],
+                    body: {
+                        result: 'error',
+                        message: err,
+                        data: null
+                    }
+                }
+                callback(false, resp);
             } else {
+                //console.log(driverresp.stdout.toString());
                 let drivers = JSON.parse(driverresp.stdout.toString());
-                driverht = {};
+                let alldrivers = {};
                 for(let i = 0; i <= drivers.length - 1; i++) {
                     /*if(driverht.hasOwnProperty(drivers[i].name)) {
 
@@ -19,10 +38,19 @@ module.exports = function(params, callback) {
                     delete drivers[i].CimSystemProperties;
                     delete drivers[i].CimInstanceProperties;
                     delete drivers[i].CimClass;
-                    driverht[drivers[i].name] = drivers[i];
+                    alldrivers[drivers[i].Name] = drivers[i];
                 }
-                //console.log(driverht);
-                callback(false, driverht);
+                driverht = alldrivers;
+                let resp = {
+                    status: 200,
+                    headers: [],
+                    body: {
+                        result: 'success',
+                        message: null,
+                        data: alldrivers
+                    }
+                }
+                callback(false, resp);
             }
         });
     }
