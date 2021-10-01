@@ -1,57 +1,60 @@
 const powershell = require('../../../lib/powershell');
 
-var driverht;
+var cachedresp;
+var reqcallbacks = [];
 
 module.exports = function(params, callback) {
-    if(driverht) {
+    if(cachedresp) {
         let resp = {
             status: 200,
             headers: [],
             body: {
                 result: 'success',
                 message: null,
-                data: driverht
+                data: cachedresp
             }
         }
+
         callback(false, resp);
     } else {
-        powershell.runCommand({ cmd: 'Get-PrinterDriver | ConvertTo-Json' }, function(err, driverresp) {
-            if(err) {
-                let resp = {
-                    status: 500,
-                    headers: [],
-                    body: {
-                        result: 'error',
-                        message: err,
-                        data: null
-                    }
-                }
-                callback(false, resp);
-            } else {
-                //console.log(driverresp.stdout.toString());
-                let drivers = JSON.parse(driverresp.stdout.toString());
-                let alldrivers = {};
-                for(let i = 0; i <= drivers.length - 1; i++) {
-                    /*if(driverht.hasOwnProperty(drivers[i].name)) {
+        if(reqcallbacks.length == 0) {
+            reqcallbacks.push(callback);
+            powershell.runCommand({ cmd: 'Get-PrinterDriver | ConvertTo-Json' }, function(err, portresp) {
+                if(err) {
+                    callback(err, false);
+                } else {
+                    let ports = JSON.parse(portresp.stdout.toString());
+                    cachedresp = {};
+                    for(let i = 0; i <= ports.length - 1; i++) {
+                        /*if(cachedresp.hasOwnProperty(ports[i].name)) {
 
-                    }*/
-                    delete drivers[i].CimSystemProperties;
-                    delete drivers[i].CimInstanceProperties;
-                    delete drivers[i].CimClass;
-                    alldrivers[drivers[i].Name] = drivers[i];
-                }
-                driverht = alldrivers;
-                let resp = {
-                    status: 200,
-                    headers: [],
-                    body: {
-                        result: 'success',
-                        message: null,
-                        data: alldrivers
+                        }*/
+                        delete ports[i].CimSystemProperties;
+                        delete ports[i].CimInstanceProperties;
+                        delete ports[i].CimClass;
+                        cachedresp[ports[i].Name] = ports[i];
+                    }
+                    //console.log(cachedresp);
+
+                    let resp = {
+                        status: 200,
+                        headers: [],
+                        body: {
+                            result: 'success',
+                            message: null,
+                            data: cachedresp
+                        }
+                    }
+
+                    while(reqcallbacks.length >= 1) {
+                        let cb = reqcallbacks.shift();
+                        cb(false, resp);
+
                     }
                 }
-                callback(false, resp);
-            }
-        });
+            });
+        } else {
+            reqcallbacks.push(callback);
+        }
     }
 }
