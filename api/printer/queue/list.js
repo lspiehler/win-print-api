@@ -4,7 +4,7 @@ var cachedresp;
 var reqcallbacks = [];
 
 module.exports = function(params, callback) {
-    if(cachedresp) {
+    if(cachedresp && params.updatecache != true) {
         let resp = {
             status: 200,
             headers: [],
@@ -18,6 +18,7 @@ module.exports = function(params, callback) {
         callback(false, resp);
     } else {
         if(reqcallbacks.length == 0) {
+            cachedresp = false;
             reqcallbacks.push(callback);
             powershell.runCommand({ cmd: 'Get-Printer | ConvertTo-Json' }, function(err, portresp) {
                 if(err) {

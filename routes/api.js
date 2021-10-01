@@ -4,8 +4,14 @@ const printer = require('../api/printer');
 
 /* GET users listing. */
 router.get('/printer/:object/:action', function(req, res, next) {
+    let params = {
+        updatecache: false
+    }
+    if(req.query.updatecache == 'true') {
+        params.updatecache = true;
+    }
     if(printer.hasOwnProperty(req.params.object) && printer[req.params.object].hasOwnProperty(req.params.action)) {
-        printer[req.params.object][req.params.action]({}, function(err, resp) {
+        printer[req.params.object][req.params.action](params, function(err, resp) {
             //console.log(resp);
             //if(err) {
                 if(resp.headers) {
