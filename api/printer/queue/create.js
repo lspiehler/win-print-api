@@ -31,6 +31,14 @@ module.exports = function(params, callback) {
         trays = params.Trays - 1;
         multipletrays = true;
     }
+    let shared = '-Shared:$False';
+    if(params.shared) {
+        let sharename = params.name;
+        if(params.sharename) {
+            sharename = params.sharename;
+        }
+        shared = '-Shared:$True -ShareName "' + sharename + '"';
+    }
     /*for(let i = 0; i <= trays; i++) {
         let name;
         if(multipletrays) {
@@ -38,10 +46,11 @@ module.exports = function(params, callback) {
         } else {
             name = params.name;
         }*/
-        powershell.runCommand({ cmd: 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"', waitstdout: false }, function(err, printerresp) {
-            //console.log('Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '"');
+        let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared
+        powershell.runCommand({ cmd: cmd, waitstdout: false }, function(err, printerresp) {
+            //console.log(cmd);
             if(err) {
-                if(err.toUpperCase().indexOf('THE SPECIFIED PRINTER ALREADY EXISTS')) {
+                if(err.toUpperCase().indexOf('THE SPECIFIED PRINTER ALREADY EXISTS') >= 0) {
                     let resp = {
                         status: 200,
                         headers: [],

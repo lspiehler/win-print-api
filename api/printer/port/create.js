@@ -14,7 +14,7 @@ module.exports = function(params, callback) {
     }
     powershell.runCommand({ cmd: 'Add-PrinterPort -Name "' + name + '" -PrinterHostAddress "' + ip + '"', waitstdout: false }, function(err, portresp) {
         if(err) {
-            if(err.toUpperCase().indexOf('THE SPECIFIED PORT ALREADY EXISTS')) {
+            if(err.toUpperCase().indexOf('THE SPECIFIED PORT ALREADY EXISTS') >= 0) {
                 let resp = {
                     status: 200,
                     headers: [],
