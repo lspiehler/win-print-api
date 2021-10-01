@@ -6,7 +6,7 @@ const printer = require('../api/printer');
 router.get('/printer/:object/:action', function(req, res, next) {
     if(printer.hasOwnProperty(req.params.object) && printer[req.params.object].hasOwnProperty(req.params.action)) {
         printer[req.params.object][req.params.action]({}, function(err, resp) {
-            console.log(resp);
+            //console.log(resp);
             //if(err) {
                 if(resp.headers) {
                     for(let i = 0; i <= resp.headers.length - 1; i++) {
