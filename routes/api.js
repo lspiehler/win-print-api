@@ -4,6 +4,7 @@ const printer = require('../api/printer');
 
 /* GET users listing. */
 router.get('/printer/:object/:action', function(req, res, next) {
+    res.set('Cache-Control', 'public, max-age=0, no-cache');
     let params = {
         updatecache: false
     }
@@ -31,6 +32,7 @@ router.get('/printer/:object/:action', function(req, res, next) {
 });
 
 router.post('/printer/:object/:action', function(req, res, next) {
+    res.set('Cache-Control', 'public, max-age=0, no-cache');
     if(printer.hasOwnProperty(req.params.object) && printer[req.params.object].hasOwnProperty(req.params.action)) {
         //console.log(req.body);
         printer[req.params.object][req.params.action](req.body, function(err, resp) {
