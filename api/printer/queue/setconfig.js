@@ -1,15 +1,7 @@
-const setprinter = require('../../../lib/setprinter');
+const queue = require('../../../lib/queue');
 
 module.exports = function(params, callback) {
-    if(!params.type) {
-        params.type = '8';
-    }
-    let keys = Object.keys(params.options);
-    let options = [];
-    for(let i = 0; i <= keys.length - 1; i++) {
-        options.push(keys[i] + '=' + params.options[keys[i]])
-    }
-    setprinter.runCommand({ cmd: [params.name, params.type, 'pDevMode=' + options.join(',')], waitstdout: true }, function(err, output) {
+    queue.setconfig(params, function(err, response) {
         if(err) {
             let resp = {
                 status: 500,
@@ -28,7 +20,7 @@ module.exports = function(params, callback) {
                 body: {
                     result: 'success',
                     message: null,
-                    data: output.stdout.toString().trim()
+                    data: response
                 }
             }
             callback(false, resp);

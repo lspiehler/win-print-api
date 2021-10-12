@@ -1,4 +1,20 @@
 const powershell = require('../../../lib/powershell');
+const queue = require('../../../lib/queue');
+
+var configPrinter = function(params, results, index, callback) {
+    if(!index) {
+        index = 0;
+    }
+    if(index <= params.config.length - 1) {
+        params.config[index].name = params.name;
+        queue.setconfig(params.config[index], function(err, result) {
+            results.push(result);
+            configPrinter(params, results, index + 1, callback);
+        });
+    } else {
+        callback(false, results);
+    }
+}
 
 module.exports = function(params, callback) {
     let requiredparams = ['name', 'driver', 'port']
@@ -74,16 +90,32 @@ module.exports = function(params, callback) {
                     callback(false, resp);
                 }
             } else {
-                let resp = {
-                    status: 201,
-                    headers: [],
-                    body: {
-                        result: 'success',
-                        message: 'The print queue was created successfully',
-                        data: params
+                if(params.config) {
+                    configPrinter(params, [], 0, function(err, result) {
+                        console.log(result);
+                        let resp = {
+                            status: 201,
+                            headers: [],
+                            body: {
+                                result: 'success',
+                                message: 'The print queue was created successfully',
+                                data: params
+                            }
+                        }
+                        callback(false, resp);
+                    });
+                } else {
+                    let resp = {
+                        status: 201,
+                        headers: [],
+                        body: {
+                            result: 'success',
+                            message: 'The print queue was created successfully',
+                            data: params
+                        }
                     }
+                    callback(false, resp);
                 }
-                callback(false, resp);
             }
         });
     //}
