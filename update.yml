@@ -8,7 +8,6 @@
       - name: Check if install directory exists
         win_stat:
           get_checksum: no
-          get_md5: no
           path: "{{ install_dir }}"
         register: repo_dir
       - name: Firewall rule to allow Print Management API on TCP port 3000
