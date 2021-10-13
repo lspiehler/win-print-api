@@ -95,6 +95,8 @@ function pingManagement() {
     if(err) {
       console.log('Error connecting to management server');
       console.log(err);
+    } else {
+      //console.log(resp);
     }
     setTimeout(function() {
       pingManagement();
