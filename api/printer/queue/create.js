@@ -62,7 +62,8 @@ module.exports = function(params, callback) {
         } else {
             name = params.name;
         }*/
-        let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared
+        let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared;
+        //console.log(cmd);
         powershell.runCommand({ cmd: cmd, waitstdout: false }, function(err, printerresp) {
             //console.log(cmd);
             if(err) {
@@ -92,7 +93,7 @@ module.exports = function(params, callback) {
             } else {
                 if(params.config) {
                     configPrinter(params, [], 0, function(err, result) {
-                        console.log(result);
+                        //console.log(result);
                         let resp = {
                             status: 201,
                             headers: [],
@@ -105,6 +106,8 @@ module.exports = function(params, callback) {
                         callback(false, resp);
                     });
                 } else {
+                    //console.log('not for this printer');
+                    //console.log(params);
                     let resp = {
                         status: 201,
                         headers: [],
