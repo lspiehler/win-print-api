@@ -19,7 +19,7 @@ module.exports = function(params, callback) {
                 headers: [],
                 body: {
                     result: 'success',
-                    message: null,
+                    message: 'Print settings successfully updated',
                     data: response
                 }
             }
