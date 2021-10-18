@@ -4,6 +4,8 @@ const qdelete = require('./delete');
 const qsetconfig = require('./setconfig');
 const qgetconfig = require('./getconfig');
 const qset = require('./set');
+const qflush = require('./flush');
+const qtestpage = require('./testpage');
 
 module.exports = {
     list: qlist,
@@ -11,5 +13,7 @@ module.exports = {
     delete: qdelete,
     setconfig: qsetconfig,
     getconfig: qgetconfig,
-    set: qset
+    set: qset,
+    flush: qflush,
+    testpage: qtestpage
 }
