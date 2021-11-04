@@ -1,6 +1,36 @@
 const powershell = require('../../../lib/powershell');
 const queue = require('../../../lib/queue');
 
+let propertymap = {
+    driver: 'drivername',
+    port: 'portname'
+}
+
+let datatypes = {
+    "comment": "string",
+    "datatype": "string",
+    "drivername": "string",
+    "untiltime": "string",
+    "keepprintedjobs": "bool",
+    "location": "string",
+    "separatorpagefile": "string",
+    "shared": "bool",
+    "sharename": "string",
+    "starttime": "string",
+    "name": "string",
+    "permissionsddl": "string",
+    "portname": "string",
+    "printprocessor": "string",
+    "priority": "string",
+    "published": "bool",
+    "renderingmode": "string",
+    "disablebranchofficelogging": "bool",
+    "branchofficeofflinelogsizemb": "string",
+    "deviceurl": "string",
+    "deviceuuid": "string",
+    "throttlelimit": "string"
+}
+
 var configPrinter = function(params, results, index, callback) {
     if(!index) {
         index = 0;
@@ -14,6 +44,34 @@ var configPrinter = function(params, results, index, callback) {
     } else {
         callback(false, results);
     }
+}
+
+var generateArgs = function(params) {
+    let args = [];
+    let props = Object.keys(params);
+    for(let i = 0; i <= props.length - 1; i++) {
+        let translateproperty = props[i];
+        //console.log('Examining property ' + props[i]);
+        if(propertymap.hasOwnProperty(props[i])) {
+            //console.log('property was translated from ' + props[i] + ' to ' + propertymap[props[i]]);
+            translateproperty = propertymap[props[i]]
+        }
+        if(datatypes.hasOwnProperty(translateproperty)) {
+            //console.log('Property definition exists ' + translateproperty);
+            if(datatypes[translateproperty]=='string') {
+                args.push('-' + translateproperty + ' "' + params[props[i]].split('"').join('`"') + '"');
+            } else if(datatypes[translateproperty]=='bool') {
+                if(params[props[i]]) {
+                    args.push('-' + translateproperty + ':$True')
+                } else {
+                    args.push('-' + translateproperty + ':$False')
+                }
+            } else {
+
+            }
+        }
+    }
+    return args.join(' ');
 }
 
 module.exports = function(params, callback) {
@@ -33,27 +91,11 @@ module.exports = function(params, callback) {
             return;
         }
     }
-    let location = '';
-    let comment = '';
-    if(params.hasOwnProperty('location')) {
-        location = params.location;
-    }
-    if(params.hasOwnProperty('comment')) {
-        comment = params.comment;
-    }
     let multipletrays = false;
     let trays = 0;
     if(params.hasOwnProperty('Trays') && params.Trays >= 1) {
         trays = params.Trays - 1;
         multipletrays = true;
-    }
-    let shared = '-Shared:$False';
-    if(params.shared) {
-        let sharename = params.name;
-        if(params.sharename) {
-            sharename = params.sharename;
-        }
-        shared = '-Shared:$True -ShareName "' + sharename + '"';
     }
     /*for(let i = 0; i <= trays; i++) {
         let name;
@@ -62,8 +104,10 @@ module.exports = function(params, callback) {
         } else {
             name = params.name;
         }*/
-        let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared;
-        //console.log(cmd);
+        //let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared;
+        let cmd = 'Add-Printer ' + generateArgs(params);
+        console.log(cmd);
+        //console.log(generateArgs(params));
         powershell.runCommand({ cmd: cmd, waitstdout: false }, function(err, printerresp) {
             //console.log(cmd);
             if(err) {
