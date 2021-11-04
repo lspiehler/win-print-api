@@ -1,11 +1,6 @@
 const powershell = require('../../../lib/powershell');
 const queue = require('../../../lib/queue');
 
-let propertymap = {
-    driver: 'drivername',
-    port: 'portname'
-}
-
 let datatypes = {
     "comment": "string",
     "datatype": "string",
@@ -50,21 +45,17 @@ var generateArgs = function(params) {
     let args = [];
     let props = Object.keys(params);
     for(let i = 0; i <= props.length - 1; i++) {
-        let translateproperty = props[i];
-        //console.log('Examining property ' + props[i]);
-        if(propertymap.hasOwnProperty(props[i])) {
-            //console.log('property was translated from ' + props[i] + ' to ' + propertymap[props[i]]);
-            translateproperty = propertymap[props[i]]
-        }
-        if(datatypes.hasOwnProperty(translateproperty)) {
-            //console.log('Property definition exists ' + translateproperty);
-            if(datatypes[translateproperty]=='string') {
-                args.push('-' + translateproperty + ' "' + params[props[i]].split('"').join('`"') + '"');
-            } else if(datatypes[translateproperty]=='bool') {
+        if(datatypes.hasOwnProperty(props[i])) {
+            //console.log('Property definition exists ' + props[i]);
+            if(datatypes[props[i]]=='string') {
                 if(params[props[i]]) {
-                    args.push('-' + translateproperty + ':$True')
+                    args.push('-' + props[i] + ' "' + params[props[i]].split('"').join('`"') + '"');
+                }
+            } else if(datatypes[props[i]]=='bool') {
+                if(params[props[i]]) {
+                    args.push('-' + props[i] + ':$True')
                 } else {
-                    args.push('-' + translateproperty + ':$False')
+                    args.push('-' + props[i] + ':$False')
                 }
             } else {
 
@@ -75,7 +66,7 @@ var generateArgs = function(params) {
 }
 
 module.exports = function(params, callback) {
-    let requiredparams = ['name', 'driver', 'port']
+    let requiredparams = ['name', 'drivername', 'portname']
     for(let i = 0; i <= requiredparams.length - 1; i++) {
         if(params.hasOwnProperty(requiredparams[i])==false) {
             let resp = {
