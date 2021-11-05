@@ -21,7 +21,7 @@ const opts = {
   rejectUnauthorized: true
 }
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(config.LISTENPORT);
 app.set('port', port);
 
 /**
