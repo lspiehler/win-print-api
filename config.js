@@ -27,5 +27,6 @@ module.exports = {
     LISTENPORT: parseInt(process.env.LISTENPORT) || 3000,
     HOSTNAME: process.env.HOSTNAME || os.hostname(),
     DOMAIN: process.env.DOMAIN || null,
-    USEWMI: getBoolean(process.env.USEWMI) || false
+    USEWMI: getBoolean(process.env.USEWMI) || false,
+    USEFILES: getBoolean(process.env.USEFILES) || false
 }
