@@ -97,7 +97,7 @@ module.exports = function(params, callback) {
         }*/
         //let cmd = 'Add-Printer -Name "' + params.name + '" -DriverName "' + params.driver + '" -PortName "' + params.port + '" -Location "' + location + '" -Comment "' + comment + '" ' + shared;
         let cmd = 'Add-Printer ' + generateArgs(params);
-        console.log(cmd);
+        //console.log(cmd);
         //console.log(generateArgs(params));
         powershell.runCommand({ cmd: cmd, waitstdout: false }, function(err, printerresp) {
             //console.log(cmd);
