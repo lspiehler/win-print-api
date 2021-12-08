@@ -3,4 +3,5 @@ bin/daemon
 daemon
 cert/*.pem
 cert/*.key
+cert/*.old
 .env
